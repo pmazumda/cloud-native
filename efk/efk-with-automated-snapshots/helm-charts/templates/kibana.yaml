@@ -1,0 +1,37 @@
+apiVersion: kibana.k8s.elastic.co/v1
+kind: Kibana
+metadata:
+  name: {{ .Release.Name }}
+spec:
+  version: {{ .Values.elasticStackVersion }}
+  image: "{{ .Values.kibana.image }}:{{ .Values.elasticStackVersion }}" 
+  count: 1
+  elasticsearchRef:
+    name: "{{ .Release.Name }}"
+  http:
+    {{- if .Values.kibana.tls.enabled }}    
+    tls:
+      certificate:
+        secretName: {{ .Values.kibana.tls.secret.secretName }}
+    {{- end }}
+    service:
+      {{- if .Values.kibana.service.annotations }}
+      metadata:       
+        annotations:
+          {{- toYaml .Values.kibana.service.annotations | nindent 10 }}
+      {{- end }}    
+      spec:
+        type: {{ .Values.kibana.service.type }}
+        {{- if .Values.kibana.service.loadBalancerIP }}
+        loadBalancerIP: {{ .Values.kibana.service.loadBalancerIP }}
+        {{- end }}
+  podTemplate:
+    spec:
+      containers:
+      - name: kibana
+        resources:
+          limits:
+            {{- if .Values.kibana.resources.limits }}
+            memory: {{ .Values.kibana.resources.limits.memory }}
+            cpu: {{ .Values.kibana.resources.limits.cpu }}
+            {{- end }}

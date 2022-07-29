@@ -1,0 +1,77 @@
+apiVersion: elasticsearch.k8s.elastic.co/v1
+kind: Elasticsearch
+metadata:
+  name: {{ .Release.Name }}  
+spec:
+  version: {{ .Values.elasticStackVersion }}
+  http:
+    {{- if .Values.elasticsearch.tls.enabled }}    
+    tls:
+      certificate:
+        secretName: {{ .Values.elasticsearch.tls.secret.secretName }}
+    {{- end }}
+    service:
+      {{- if .Values.elasticsearch.service.annotations }}    
+      metadata:       
+        annotations:
+          {{- toYaml .Values.elasticsearch.service.annotations | nindent 10 }}
+      {{- end }}    
+      spec:
+        type: {{ .Values.elasticsearch.service.type }}
+        {{- if .Values.elasticsearch.service.loadBalancerIP }}
+        loadBalancerIP: {{ .Values.elasticsearch.service.loadBalancerIP }}
+        {{- end }}
+  {{- if .Values.backup.enabled }}      
+  secureSettings:
+  - secretName: snapshot-secret 
+  {{- end }}
+  image: "{{ .Values.elasticsearch.image }}:{{ .Values.elasticStackVersion }}"
+  volumeClaimDeletePolicy: DeleteOnScaledownOnly
+  nodeSets:
+  - name: my-cluster
+    config:
+      # most Elasticsearch configuration parameters are possible to set, e.g: node.attr.attr_name: attr_value
+      node.roles: ["master", "data", "ingest"]
+      #node.data: true
+      #node.ingest: true
+      #node.ml: false      # this allows ES to run on nodes even if their vm.max_map_count has not been increased, at a performance cost
+      node.store.allow_mmap: false
+    podTemplate:
+      spec:
+        {{- if .Values.backup.enabled }}
+        initContainers:
+        - name: install-plugins
+          command:
+          - sh
+          - -c
+          - |
+            bin/elasticsearch-plugin remove repository-azure
+            bin/elasticsearch-plugin install --batch repository-azure
+        {{- end }}
+        containers:
+        - name: elasticsearch
+          # specify resource limits and requests
+          resources:
+            limits:
+              {{- if .Values.elasticsearch.resources.limits }}
+              memory: {{ .Values.elasticsearch.resources.limits.memory }}
+              cpu: {{ .Values.elasticsearch.resources.limits.cpu }}
+              {{- end }}
+          env:
+          - name: ES_JAVA_OPTS
+            value: "-Xms6g -Xmx6g"
+        
+    count: {{ .Values.elasticsearch.replicaCount }}
+    volumeClaimTemplates:
+    - metadata:
+        name: elasticsearch-data        
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 5Gi
+        storageClassName: {{ .Values.elasticsearch.storageClassName }}  
+    
+
+

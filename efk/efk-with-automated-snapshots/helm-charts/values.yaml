@@ -1,0 +1,90 @@
+elasticStackVersion: 8.3.1
+elasticsearch:
+  image: elasticsearch
+  replicaCount: 2
+  storageClassName: default
+  service:
+    type: LoadBalancer
+    annotations: 
+      service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+      service.beta.kubernetes.io/azure-load-balancer-internal-subnet: "Lb_External_IP"
+  #  type: ClusterIP
+  resources:
+    limits:
+      memory: "8Gi"
+      cpu: 2
+       
+#  --  if you want to pull from a private registry create a secret --
+  #imagePullSecrets:
+  #  name: provatecred
+  tls:
+    # Enable the tls or not
+    enabled: true 
+    secret:
+      # The name of secret which would contain keys named:
+      # "tls.crt" - the certificate ( CA signed )
+      # "tls.key" - the private key
+      secretName: "efk-tls"
+kibana:
+  image: kibana  
+  service:
+    type: LoadBalancer
+    annotations: 
+      service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+      service.beta.kubernetes.io/azure-load-balancer-internal-subnet: "Lb_External_IP"
+  resources:
+    limits:
+      memory: "4Gi"
+      cpu: 1  #
+  #  if you want to pull from a private registry create a secret --
+  #  imagePullSecrets:
+  #  name: provatecred
+  tls:
+    # Enable the tls or not
+    enabled: true 
+    secret:
+      # The name of secret which would contain keys named:
+      # "tls.crt" - the certificate ( CA signed )
+      # "tls.key" - the private key
+      # Place the CA signed cert and key inside the cert directory with names as tls.crt and tls.key
+      secretName: "efk-tls"
+metricbeat:
+  enabled: false
+  image: metricbeat
+  #  --  if you want to pull from a private registry create a secret --
+  #imagePullSecrets:
+  #  name: provatecred
+
+
+fluentd:
+  #image:
+  # registry: 
+  #  repository: fluentd
+  #  tag: bitnami-1.11.5
+  #  pullSecrets:
+  #  - provatecred
+  forwarder:
+    enabled: false
+  aggregator:
+    enabled: true
+    configMap: elasticsearch-output
+    persistence:
+      enabled: true    
+      storageClass: default
+      size: 5Gi
+env:
+  secret:
+    password: ZWxhc3RpYwo=
+
+backup:
+  enabled: false #Set true to enable snapshot
+  storageaccountName: ZXVhaWR0Y29ydddZWFrc3Nh
+  storageaccountKey: dXpuZGZBL3dYaVY0LzRQQ20yODVQYVlodjFNUUpKcys4TG8razUyVnZXY2FTQUNqMWRsbFFKZllhZ08rQlBodmhEZnBiQndKZVc5bUpGNzQ5Z0pHZHc9PQ==
+  repository:
+    name: my-backup
+  snapshot:
+    schedule: monthly  # Other values can be daily, weekly, monthly, yearly or custom
+    #cronSchedule: "*/10 * * * *"  #Uncomment if schedule = custom
+    format: snapshot-$(date +"%Y-%m-%d-%H-%M")
+    #indices: washington-coviddata,florida-coviddata # valid values are all or  an indexname 
+    indices: all

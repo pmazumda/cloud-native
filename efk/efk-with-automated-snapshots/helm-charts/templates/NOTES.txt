@@ -1,0 +1,2 @@
+EFK stack with below components were installed: 
+[Elasticsearch , FluentD, Metricbeat, Kibana]

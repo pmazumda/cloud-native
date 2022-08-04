@@ -29,7 +29,7 @@ In order to install, execute the following commands:
 To delete/uninstall the environment,execute `helm uninstall efk-[CLUSTER_NAME] -n efk-[CLUSTER_NAME] `.
 
 Note:
-### Enable CA signed certs###
+### Enable CA signed certs
 By default this chart will install EFK stack with self-signed certs.  If you want to install EFK with your own certs, place the cert and the key named as **tls.crt** and **tls.key** respectively inside the cert directory of the chart and overridden values as below can be passed to  default values.
 ```
  tls:

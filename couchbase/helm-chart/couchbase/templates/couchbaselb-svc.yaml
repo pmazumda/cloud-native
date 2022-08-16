@@ -1,0 +1,18 @@
+{{- if .Values.couchbasedblb.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.couchbasedblb.service.name }}
+  labels:
+    {{- include "couchbase.labels" . | nindent 4 }}
+  {{ if eq .Values.cloudProvider "azure" }}
+    {{- include "couchbasedblb.service.annotations" . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.couchbasedblb.service.type }}
+  ports:
+    - port: {{ .Values.couchbasedblb.service.port }}
+      name: web
+  selector:
+    {{- include "couchbase.selectorLabels" . | nindent 4 }}
+{{- end }}

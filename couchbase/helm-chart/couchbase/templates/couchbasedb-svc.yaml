@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.couchbasedbinternal.service.name }}
+  labels:
+    {{- include "couchbase.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.couchbasedbinternal.service.type }}
+  ports:
+    - port: {{ .Values.couchbasedbinternal.service.port }}
+      name: web
+  selector:
+    {{- include "couchbase.selectorLabels" . | nindent 4 }}
+  clusterIP: None

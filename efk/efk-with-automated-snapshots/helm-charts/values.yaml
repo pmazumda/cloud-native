@@ -7,7 +7,7 @@ elasticsearch:
     type: LoadBalancer
     annotations: 
       service.beta.kubernetes.io/azure-load-balancer-internal: "true"
-      service.beta.kubernetes.io/azure-load-balancer-internal-subnet: "Lb_External_IP"
+      service.beta.kubernetes.io/azure-load-balancer-internal-subnet: ""   #add internal-subnet name here
   #  type: ClusterIP
   resources:
     limits:
@@ -31,7 +31,7 @@ kibana:
     type: LoadBalancer
     annotations: 
       service.beta.kubernetes.io/azure-load-balancer-internal: "true"
-      service.beta.kubernetes.io/azure-load-balancer-internal-subnet: "Lb_External_IP"
+      service.beta.kubernetes.io/azure-load-balancer-internal-subnet: "" #add internal-subnet name here
   resources:
     limits:
       memory: "4Gi"
@@ -78,8 +78,8 @@ env:
 
 backup:
   enabled: false #Set true to enable snapshot
-  storageaccountName: ZXVhaWR0Y29ydddZWFrc3Nh
-  storageaccountKey: dXpuZGZBL3dYaVY0LzRQQ20yODVQYVlodjFNUUpKcys4TG8razUyVnZXY2FTQUNqMWRsbFFKZllhZ08rQlBodmhEZnBiQndKZVc5bUpGNzQ5Z0pHZHc9PQ==
+  storageaccountName:  #base64 encoded azure storage account name
+  storageaccountKey:   #base64 encode azure storage account key 
   repository:
     name: my-backup
   snapshot:

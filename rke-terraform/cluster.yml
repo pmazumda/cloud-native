@@ -1,0 +1,34 @@
+nodes:
+    - address: 10.289.187.252
+      user: iditadmin
+      role:
+        - controlplane
+        - etcd
+        - worker
+services:
+  kubelet: 
+    image: "rancher/hyperkube:v1.24.2-rancher1"
+    extra_args:
+      container-runtime-endpoint: unix:///var/run/cri-dockerd.sock
+enable_cri_dockerd: true
+addon_job_timeout: 60
+kubernetes_version: "v1.24.4-rancher1-1"
+network:
+  plugin: calico
+  # Specify MTU
+  mtu: 1400
+  tolerations:
+  - key: "node.kubernetes.io/unreachable"
+    operator: "Exists"
+    effect: "NoExecute"
+    tolerationseconds: 300
+  - key: "node.kubernetes.io/not-ready"
+    operator: "Exists"
+    effect: "NoExecute"
+    tolerationseconds: 300
+dns:
+  provider: coredns
+  update_strategy:
+  linear_autoscaler_params:
+    prevent_single_point_failure: true
+

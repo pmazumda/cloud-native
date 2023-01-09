@@ -1,6 +1,6 @@
 nodes:
-    - address: 10.289.187.252
-      user: iditadmin
+    - address: 10.280.183.253
+      user: devsts01
       role:
         - controlplane
         - etcd

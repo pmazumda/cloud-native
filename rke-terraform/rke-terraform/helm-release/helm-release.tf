@@ -6,7 +6,7 @@ provider "helm" {
 }
 
 
-resource "helm_release" "ace" {
+resource "helm_release" "states" {
   name        = var.release_name
   chart       = var.chart_name
   repository  = "./colarado"

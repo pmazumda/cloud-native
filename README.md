@@ -154,8 +154,9 @@ You can now interact with the MSSQL server as you would in a standard sqlcmd ses
 ### Error Handling
 
 
-**"Invalid zero-length device name":** Ensure that the backup file path is valid and not empty.
-**"No MSSQL pod found":** Ensure that the MSSQL pod exists in the specified namespace and that it has the correct label (app=mssql).
+- **"Invalid zero-length device name":** Ensure that the backup file path is valid and not empty.
+
+- **"No MSSQL pod found":** Ensure that the MSSQL pod exists in the specified namespace and that it has the correct label (app=mssql).
 
 
 ### License

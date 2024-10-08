@@ -1,9 +1,9 @@
 apiVersion: krew.googlecontainertools.github.com/v1alpha2
 kind: Plugin
 metadata:
-  name: kubectl-mssql
+  name: kubectl-dbops
 spec:
-  homepage: https://github.com/pmazumda/cloud-native
+  homepage: https://github.com/pmazumda/cloud-native/plugins/kubectl-dbops
   shortDescription: Custom kubectl plugin to interact with MSSQL DB in Kubernetes.
   version: v0.1.0
   description: |
@@ -12,7 +12,7 @@ spec:
   options: |
     The plugin has a couple of flags available to it which can be used to achieve desired
 	results.
-    See https://github.com/pmazumda/cloud-native for available flags and  usage for each.
+    See https://github.com/pmazumda/cloud-native/plugins/kubectl-dbops for available flags and  usage for each.
   platforms:
   - selector:
       matchExpressions:
@@ -21,11 +21,11 @@ spec:
         values:
         - darwin
         - linux
-    uri: https://github.com/pmazumda/cloud-native/plugins/mssql-backups.zip
+    uri: https://github.com/pmazumda/cloud-native/plugins/kubectl-dbops/v0.1.0.zip
     sha256: 3afd412f36c1b2d655fa2ddf54a58529162d44be645c8819f6305167c4f70d5c
-    bin: kubectl-mssql
+    bin: dbops.sh
     files:
-    - from: kubectl-*/*
-      to: .
-    - from: kubectl-*/LICENSE
-      to: .
+    - from: "kubectl-*/dbops.sh"
+      to: "./dbops.sh"
+    - from: "kubectl-*/LICENSE"
+      to: "."

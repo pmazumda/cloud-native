@@ -1,4 +1,4 @@
-# `kubectl-mssql` Plugin
+# `dbops` Plugin
 
 This is a custom `kubectl` plugin that allows you to interact with an MSSQL server running inside a Kubernetes cluster. It supports taking database backups, listing databases, listing backup files, and connecting to the SQL prompt.
 
@@ -18,17 +18,17 @@ This is a custom `kubectl` plugin that allows you to interact with an MSSQL serv
 
 ## Installation
 
-Save the script to a file called `kubectl-mssql` and place it in your `PATH` (e.g., `/usr/local/bin/`).
+Save the script to a file called `dbops` and place it in your `PATH` (e.g., `/usr/local/bin/`).
 
 ```bash
-sudo mv kubectl-mssql /usr/local/bin/kubectl-mssql
-sudo chmod +x /usr/local/bin/kubectl-mssql
+sudo mv dbops /usr/local/bin/dbops
+sudo chmod +x /usr/local/bin/dbops
 ```
 
 ## Usage
 
 ```bash
-kubectl mssql <namespace> [--backup <database-name> [<backup-file>]] [--list-databases] [--list-backups]
+kubectl dbops <namespace> [--backup <database-name> [<backup-file>]] [--list-databases] [--list-backups]
 ```
 
 ### Parameters:
@@ -64,7 +64,7 @@ Enter MSSQL password:
 To take a backup of the MyDatabase database with an auto-generated backup file path:
 
 ```bash
-kubectl mssql default --backup MyDatabase
+kubectl dbops default --backup MyDatabase
 ```
 
 ##### Output:
@@ -80,7 +80,7 @@ Backup file is stored at: /var/opt/mssql/backups/MyDatabase_backup_2024100412345
 To provide a specific backup file path:
 
 ```bash
-kubectl mssql default --backup MyDatabase /var/opt/mssql/backups/custom_backup.bak
+kubectl dbops default --backup MyDatabase /var/opt/mssql/backups/custom_backup.bak
 ```
 
 ##### Output:
@@ -97,7 +97,7 @@ Backup file is stored at: /var/opt/mssql/backups/custom_backup.bak
 To list all databases available in the MSSQL instance:
 
 ```bash
-kubectl mssql default --list-databases
+kubectl dbops default --list-databases
 ```
 
 ##### Output:
@@ -120,7 +120,7 @@ MyDatabase
 To list all existing backups stored in the default backup directory (`/var/opt/mssql/backups`):
 
 ```bash
-kubectl mssql default --list-backups
+kubectl dbops default --list-backups
 ```
 
 ##### Output:
@@ -137,7 +137,7 @@ Listing all backup files in /var/opt/mssql/backups...
 To open an interactive SQL prompt using sqlcmd:
 
 ```bash
-kubectl mssql default
+kubectl dbops default
 ```
 
 ##### Output:
